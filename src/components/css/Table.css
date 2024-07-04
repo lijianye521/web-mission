@@ -1,0 +1,38 @@
+.even-row  {
+    background-color: #ffffff !important; /* 偶数行白色背景 */
+}
+
+.odd-row  {
+    background-color: #f0f0f0 !important; /* 奇数行灰色背景 */
+}
+
+
+/* 覆盖 ant-table-thead 类的样式 */
+.ant-table-thead > tr > th {
+    background-color: #f0f0f0 !important; /* 确保表头背景色继承 */
+}
+/* 覆盖 ant-table-column-sort 类的样式 */
+.odd-row.ant-table-column-sort {
+    background-color: #f0f0f0 !important; /* 确保奇数行排序时背景色为灰色 */
+}
+
+
+.even-row.ant-table-column-sort {
+    background-color: #ffffff !important; /* 确保偶数行排序时背景色为白色 */
+}
+
+/* 增加优先级 使用后代选择器*/
+.ant-table-tbody > tr.even-row > td {
+    background-color: #ffffff !important;
+}
+
+.ant-table-tbody > tr.odd-row > td {
+    background-color: #f0f0f0 !important;
+} 
+
+.ant-table-tbody > tr.odd-row:hover > td {
+    background-color: #D3EEF5 !important; /* 奇数行悬停时红色背景 */
+}
+.ant-table-tbody > tr.even-row:hover > td {
+    background-color: #D3EEF5 !important; /* 奇数行悬停时红色背景 */
+}

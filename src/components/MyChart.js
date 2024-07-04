@@ -25,6 +25,7 @@ const MyChart = ({ expandedSize }) => {
       .then(response => {
         setData(response.data);
         const months = response.data.map(item => item.日期);
+        months.reverse();
         setMonths(months);
         updateMetricData(response.data, selectedIndicator);
         const keys = Object.keys(response.data[0]).filter(key => key !== '日期' && key !== '序号');
@@ -79,6 +80,7 @@ const MyChart = ({ expandedSize }) => {
 
   const updateMetricData = (data, indicator) => {
     const metricData = data.map(item => parseFloat(item[indicator]));
+    metricData.reverse();
     setMetricData(metricData);
     renderChart(months, metricData);
   };
@@ -103,7 +105,7 @@ const MyChart = ({ expandedSize }) => {
       },
       xAxis: {
         type: 'category',
-        data: months.reverse(),
+        data: months,
         axisLabel: {
           formatter: function (value) {
             const date = new Date(value);
@@ -125,7 +127,7 @@ const MyChart = ({ expandedSize }) => {
         {
           name: selectedIndicator,
           type: chartType, // 使用状态中的图表类型
-          data: metricData.reverse(),
+          data: metricData,
           itemStyle: {
             color: lineColor // 使用状态中的线条颜色
           }

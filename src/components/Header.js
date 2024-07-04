@@ -9,7 +9,7 @@ const items = [
     {
       key: '2',
       label: '市场规模',
-      children: [
+      items: [ // 修改这里
         {
           key: '21',
           label: '市场规模统计（交易所公布）',
@@ -27,7 +27,7 @@ const items = [
     {
       key: '3',
       label: '股票概览',
-      children: [
+      items: [ // 修改这里
         {
           key: '31',
           label: '上市股票一览',
@@ -45,7 +45,7 @@ const items = [
     {
       key: '4',
       label: '备查资料',
-      children: [
+      items: [ // 修改这里
         {
           key: '41',
           label: '股票更名',
@@ -75,7 +75,7 @@ const items = [
     {
       key: '5',
       label: '退市资料',
-      children: [
+      items: [ // 修改这里
         {
           key: '51',
           label: '退市资料',
@@ -103,7 +103,7 @@ const App = () => {
             style={{ width: "100%", height: '100vh', backgroundColor: '#45454D', color: 'white' }}
         >
             {items.map((item) => (
-                item.children ? (
+                item.items ? ( // 修改这里
                     <Menu.SubMenu 
                         key={item.key} 
                         title={
@@ -112,7 +112,7 @@ const App = () => {
                             </span>
                         }
                     >
-                        {item.children.map((child) => (
+                        {item.items.map((child) => ( // 修改这里
                             <Menu.Item 
                                 key={child.key} 
                                 style={{ 

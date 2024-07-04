@@ -1,70 +1,109 @@
-# Getting Started with Create React App
+# Web小任务开发日志
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+> 本次的前端小任务感觉是导师为让学员回顾之前开发页面的流程和必要的页面开发本领而准备的。
 
-## Available Scripts
+## 使用环境
 
-In the project directory, you can run:
+| 环境    | 版本    |
+| ------- | ------- |
+| react   | 18.3.1  |
+| node    | 20.15.0 |
+| webpack | 5.64.4  |
 
-### `npm start`
+## 事前分析
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+![image-20240703150603753](./assets/image-20240703150603753.png)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+本次小任务主要实现左侧栏目树菜单，右侧上方的表格及下方的图形,可以使用grid栅格
 
-### `npm test`
+![image-20240703152622793](./assets/image-20240703152622793.png)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+然后再在三个区域内放三个组件就行了
 
-### `npm run build`
+# 第一天学习时间
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+2024年7月3日 15：14 - 2024年 7月 3日 23：35
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## 数据模拟
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+股市开始时间是1990年12月19日 但是这样数据太少了  没有挑战性 我们假设股市是从1990年开始的 这样我们就有了2694条数据 
 
-### `npm run eject`
+用js模拟生成 存储在data.json里，本人简化了jwt使用token 请求权限获取数据库的过程，直接把这个data.json文件放到components目录下
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+下面是这些json数据的示例
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```json
+ {
+    "序号": 2692,
+    "日期": "1800-03",
+    "上市公司总数": "5005",
+    "上市证劵总数": "26401",
+    "上市股票总数": "5175",
+    "上市A股总数": "4107",
+    "上市B股总数": "1068",
+    "总股本（亿股）": "72501.874",
+    "总市值（亿元）": "1149645.138",
+    "流通股本（亿股）": "53095.149",
+    "流通市值（亿元）": "640984.662",
+    "投资者开户总数（万户）": "8232"
+  },
+  {
+    "序号": 2693,
+    "日期": "1800-02",
+    "上市公司总数": "5051",
+    "上市证劵总数": "48918",
+    "上市股票总数": "5076",
+    "上市A股总数": "4691",
+    "上市B股总数": "385",
+    "总股本（亿股）": "71641.353",
+    "总市值（亿元）": "2020165.066",
+    "流通股本（亿股）": "59348.593",
+    "流通市值（亿元）": "616282.399",
+    "投资者开户总数（万户）": "6680"
+  },
+  {
+    "序号": 2694,
+    "日期": "1800-01",
+    "上市公司总数": "4197",
+    "上市证劵总数": "39783",
+    "上市股票总数": "4896",
+    "上市A股总数": "4679",
+    "上市B股总数": "217",
+    "总股本（亿股）": "76075.690",
+    "总市值（亿元）": "2664615.431",
+    "流通股本（亿股）": "50075.680",
+    "流通市值（亿元）": "672442.351",
+    "投资者开户总数（万户）": "8626"
+  }
+]
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
-## Learn More
+## 三个组件的设计
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### 菜单项
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+稍微用ant design升级了一下，让ui好看了一点点，选中二级菜单时，一级菜单也会跟着变成蔚蓝色
 
-### Code Splitting
+![image-20240703163532074](./assets/image-20240703163532074.png)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### 表格项
 
-### Analyzing the Bundle Size
+表格项这部分卡了我1个多小时，原因是从日历中获取的数据对象为datejs  而且进行数据筛选的时候使用的是momentjs ，两个对象没法比较 一直不对 最后我将datejs的对象更改为momentjs，但是混用导致datepicker出现一些问题，最后找到解决方法是统一使用datejs。
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+![image-20240703232715813](./assets/image-20240703232715813.png)
 
-### Making a Progressive Web App
+实现了一些基本功能 日期选择，鼠标悬停背景色变化，
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+之后实现上面这一串功能
 
-### Advanced Configuration
+![image-20240703232903511](./assets/image-20240703232903511.png)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+因为不知道这些功能点开具体是什么样子 让这九个功能全部和导出到Excel的功能一致。而且感觉数据筛选，单行转置等功能有点类似于excel的味道，后续可以使用一些第三方库来实现
 
-### Deployment
+### 图项
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+![image-20240704010635893](./assets/image-20240704010635893.png)
 
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+简简单单copy过去一个表，有点熬不住了，剩下功能明天再加吧。

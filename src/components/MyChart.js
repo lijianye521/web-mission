@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import * as echarts from 'echarts';
 import axios from 'axios';
-import { Button, Space, Drawer, Checkbox } from 'antd'; // 引入 Drawer 和 Checkbox 组件
+import { Button, Space, Drawer,  } from 'antd'; // 引入 Drawer 和 Checkbox 组件
 import { SketchPicker } from 'react-color'; // 引入调色盘组件
 import { saveAs } from 'file-saver'; // 引入 file-saver 库
 import { message ,Select} from 'antd'; // 引入 message 组件

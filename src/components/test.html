@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关注按钮</title>
+    <style>
+        #followButton {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <button id="followButton">+关注</button>
+
+    <script>
+        const followButton = document.getElementById('followButton');
+
+        // 获取初始关注量
+        let followCount = localStorage.getItem('followCount');
+        if (followCount === null) {
+            followCount = 0;
+        } else {
+            followCount = parseInt(followCount, 10);
+        }
+        followButton.textContent = `+关注 (${followCount})`;
+
+        followButton.addEventListener('click', () => {
+            followCount++;
+            localStorage.setItem('followCount', followCount);
+            followButton.textContent = `+关注 (${followCount})`;
+        });
+    </script>
+</body>
+</html>

@@ -127,7 +127,7 @@ const MarketTable = () => {
       <div style={{ 
         position: 'absolute', 
         top: '-140px', 
-        left: '-40px', 
+        left: '-210px', 
         width: '100%', 
         height: '100%', 
         zIndex: iframeZIndex, // 使用状态变量

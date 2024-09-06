@@ -9,6 +9,8 @@ import './css/Table.css';
 import columns from './column';
 import * as XLSX from 'xlsx';
 import useFilter from './Filter'; // 引用 useFilter 这里把筛选功能单独放在一个组件里
+import { saveAs } from 'file-saver'; // 引入 file-saver
+
 
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
@@ -28,7 +30,7 @@ const MarketTable = () => {
   } = useFilter(data);
 
   useEffect(() => {
-    axios.get('/data.json')
+    axios.get('/bigdata.json')
       .then(response => {
         setData(response.data);
         setFilteredData(response.data);
@@ -95,7 +97,11 @@ const MarketTable = () => {
     const worksheet = XLSX.utils.aoa_to_sheet(transposedData);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
-    XLSX.writeFile(workbook, "MarketData_Transposed.xlsx");
+    // 生成 Excel 文件的 Blob
+    const wbout = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const blob = new Blob([wbout], { type: 'application/octet-stream' });
+    // 使用 file-saver 保存文件
+    saveAs(blob, "MarketData_Transposed.xlsx");
   };
 
   const handleSearch = (value) => {
@@ -123,56 +129,34 @@ const MarketTable = () => {
   }, []);
 
   return (
-    <div style={{ width: '100%', height: '100%', overflowY: 'auto' }}>
-      <div style={{ 
-        position: 'absolute', 
-        top: '-140px', 
-        left: '-210px', 
-        width: '100%', 
-        height: '100%', 
-        zIndex: iframeZIndex, // 使用状态变量
-        pointerEvents: iframePointerEvents // 使用状态变量
-      }}>
-        <iframe 
-          src="https://project.lijianye.work" 
-          style={{ 
-            width: '100%', 
-            height: '100%', 
-            opacity: 0.1, 
-            pointerEvents: iframePointerEvents // 使用状态变量
-          }} 
-          frameBorder="0"
-        ></iframe>
-      </div>
-      <Row>
-        <Space>
-          <Button type="primary" onClick={exportToExcel}> <CaretRightOutlined />提取数据</Button>
-          <Button onClick={exportToExcel}> <FileExcelOutlined />导出为Excel</Button>
-          <Button onClick={() => setShowFilterIcon(!showFilterIcon)}>
-            <img src="/icon/_筛选.svg" alt="筛选" style={{ width: 16, height: 16, border: 'none' }} /> 数据筛选
-          </Button>
-          <Button onClick={exportTransposedToExcel}>
+
+      <><Row>
+      <Space>
+        <Button type="primary" onClick={exportToExcel}> <CaretRightOutlined />提取数据</Button>
+        <Button onClick={exportToExcel}> <FileExcelOutlined />导出为Excel</Button>
+        <Button onClick={() => setShowFilterIcon(!showFilterIcon)}>
+          <img src="/icon/_筛选.svg" alt="筛选" style={{ width: 16, height: 16, border: 'none' }} /> 数据筛选
+        </Button>
+        <Button onClick={exportTransposedToExcel}>
           <img src="/icon/转置.svg" alt="转置" style={{ width: 16, height: 16, border: 'none' }} /> 单行转置
         </Button>
-          <Button onClick={exportToExcel}>
-            <img src="/icon/统计.svg" alt="统计" style={{ width: 16, height: 16, border: 'none' }} /> 整体统计
-          </Button>
-          <Button onClick={exportToExcel}>
-            <img src="/icon/我的报表.svg" alt="我的报表" style={{ width: 16, height: 16, border: 'none' }} /> 我的报表
-          </Button>
-          <Button onClick={exportToExcel}>
-            <img src="/icon/报表说明.svg" alt="报表说明" style={{ width: 16, height: 16, border: 'none' }} /> 报表说明
-          </Button>
-          <Button onClick={exportToExcel}>
-            <img src="/icon/视频介绍.svg" alt="视频介绍" style={{ width: 16, height: 16, border: 'none' }} /> 视频介绍
-          </Button>
-          <Button onClick={exportToExcel}>
-            <img src="/icon/提建议.svg" alt="提建议" style={{ width: 16, height: 16, border: 'none' }} /> 提建议
-          </Button>
-        </Space>
-      </Row>
-
-      <Row style={{ marginTop: 16 }}>
+        <Button onClick={exportToExcel}>
+          <img src="/icon/统计.svg" alt="统计" style={{ width: 16, height: 16, border: 'none' }} /> 整体统计
+        </Button>
+        <Button onClick={exportToExcel}>
+          <img src="/icon/我的报表.svg" alt="我的报表" style={{ width: 16, height: 16, border: 'none' }} /> 我的报表
+        </Button>
+        <Button onClick={exportToExcel}>
+          <img src="/icon/报表说明.svg" alt="报表说明" style={{ width: 16, height: 16, border: 'none' }} /> 报表说明
+        </Button>
+        <Button onClick={exportToExcel}>
+          <img src="/icon/视频介绍.svg" alt="视频介绍" style={{ width: 16, height: 16, border: 'none' }} /> 视频介绍
+        </Button>
+        <Button onClick={exportToExcel}>
+          <img src="/icon/提建议.svg" alt="提建议" style={{ width: 16, height: 16, border: 'none' }} /> 提建议
+        </Button>
+      </Space>
+    </Row><Row style={{ marginTop: 16 }}>
         <Space style={{ marginBottom: 16 }}>
           市场类型
           <Select defaultValue="全部" style={{ width: 120 }} onChange={handleMarketTypeChange}>
@@ -186,8 +170,7 @@ const MarketTable = () => {
             format="YYYY-MM"
             onChange={(date) => handleStartDateChange(date)}
             allowClear={true}
-            picker="month"
-          />
+            picker="month" />
           截止日期
           <DatePicker
             value={selectedRange[1]}
@@ -197,19 +180,15 @@ const MarketTable = () => {
             picker="month"
             disabledDate={(current) => {
               return selectedRange[0] ? current.isBefore(selectedRange[0], 'month') : false;
-            }}
-          />
+            } } />
           <Input.Search placeholder="搜索" onSearch={handleSearch} style={{ width: 200 }} />
         </Space>
-      </Row>
-
-      <Table
+      </Row><Table
         columns={columnsWithSearch}
         dataSource={filteredData}
         rowKey="序号"
-        rowClassName={(record, index) => index % 2 === 0 ? 'even-row' : 'odd-row'}
-      />
-    </div>
+        scroll={{ y: 200 }}
+        rowClassName={(record, index) => index % 2 === 0 ? 'even-row' : 'odd-row'} /></>
   );
 };
 
